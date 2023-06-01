@@ -27,7 +27,7 @@ jobs:
 
       - name: Deploy to Azure Container Instances
         run: |
-          az container create --resource-group ${{ env.RESOURCE_GROUP }} --file ./docker/docker-compose.yaml
+          az container create --resource-group ${{ env.RESOURCE_GROUP }} --name conductor --file ./docker/docker-compose.yaml
 
 # - name: Deploy to Azure Container Instances
 # run: |
