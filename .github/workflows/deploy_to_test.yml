@@ -25,10 +25,6 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Install Azure container instance extension
-        run: |
-          az extension add --name containerinstance
-
       - name: Deploy to Azure Container Instances
         run: |
           az container create --resource-group ${{ env.RESOURCE_GROUP }} --file docker-compose.yml --name ${{ env.CONTAINER_GROUP }} --registry-login-server ${{ env.REGISTRY_LOGIN_SERVER }} --registry-username ${{ env.REGISTRY_USERNAME }} --registry-password ${{ env.REGISTRY_PASSWORD }}
