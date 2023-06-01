@@ -27,4 +27,4 @@ jobs:
 
       - name: Deploy to Azure Container Instances
         run: |
-          az container create --resource-group ${{ env.RESOURCE_GROUP }} --file docker-compose.yml --name ${{ env.CONTAINER_GROUP }} --registry-login-server ${{ env.REGISTRY_LOGIN_SERVER }} --registry-username ${{ env.REGISTRY_USERNAME }} --registry-password ${{ env.REGISTRY_PASSWORD }}
+          az container create --resource-group ${{ env.RESOURCE_GROUP }} --file ./docker/docker-compose.yml --name ${{ env.CONTAINER_GROUP }} --registry-login-server ${{ env.REGISTRY_LOGIN_SERVER }} --registry-username ${{ env.REGISTRY_USERNAME }} --registry-password ${{ env.REGISTRY_PASSWORD }}
