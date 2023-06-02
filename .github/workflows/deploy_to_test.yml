@@ -32,7 +32,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
-          tags: ${{ secrets.REGISTRY_LOGIN_SERVER }}/conductorui:${{ steps.tag.outputs.tag }}
+          tags: ${{ env.REGISTRY_LOGIN_SERVER }}/romanprivateorg/conductor:latest
           file: ./docker/ui/Dockerfile
 # - name: Deploy to Azure Container Instances
 #   run: |
