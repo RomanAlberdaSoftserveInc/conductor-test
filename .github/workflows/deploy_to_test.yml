@@ -23,36 +23,63 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - name: Login To Container Registry
-        uses: docker/login-action@v2
+
+      # - name: Login To Container Registry
+      #   uses: docker/login-action@v2
+      #   with:
+      #     registry: ${{ env.REGISTRY_LOGIN_SERVER }}
+      #     username: ${{ env.REGISTRY_USERNAME }}
+      #     password: ${{ env.REGISTRY_PASSWORD }}
+
+      - name: "Build and push image"
+        uses: azure/docker-login@v1
         with:
-          registry: ${{ env.REGISTRY_LOGIN_SERVER }}
+          login-server: ${{ env.REGISTRY_LOGIN_SERVER }}
           username: ${{ env.REGISTRY_USERNAME }}
           password: ${{ env.REGISTRY_PASSWORD }}
+      - run: |
+          docker build docker/server/Dockerfile -t ${{ env.REGISTRY_LOGIN_SERVER }}/romanprivateorg:${{ github.sha }}
+          docker push ${{ env.REGISTRY_LOGIN_SERVER }}/romanprivateorg:${{ github.sha }}
 
-      - name: Build and push conductor ui
-        uses: docker/build-push-action@v4
-        with:
-          push: true
-          tags: ${{ env.REGISTRY_LOGIN_SERVER }}/romanprivateorg/conductor-ui:latest
-          file: ./docker/ui/Dockerfile
+      # - name: Build and push conductor ui
+      #   uses: docker/build-push-action@v4
+      #   with:
+      #     push: true
+      #     tags: ${{ env.REGISTRY_LOGIN_SERVER }}/romanprivateorg/conductor-ui:latest
+      #     file: ./docker/ui/Dockerfile
 
-      - name: Build and push conductor server
-        uses: docker/build-push-action@v4
-        with:
-          push: true
-          tags: ${{ env.REGISTRY_LOGIN_SERVER }}/romanprivateorg/conductor-server:latest
-          file: ./docker/server/Dockerfile
-# - name: Deploy to Azure Container Instances
-#   run: |
-#     az container create --resource-group ${{ env.RESOURCE_GROUP }} --name conductor --file ./docker/docker-compose.yaml
+      # - name: Build and push conductor server
+      #   uses: docker/build-push-action@v4
+      #   with:
+      #     push: true
+      #     tags: ${{ env.REGISTRY_LOGIN_SERVER }}/romanprivateorg/conductor-server:latest
+      #     file: ./docker/server/Dockerfile
 
-# - name: Deploy to Azure Container Instances
-# run: |
-#   az container create
-#       --resource-group ${{ env.RESOURCE_GROUP }}
-#       --file ./docker/docker-compose.yaml
-#       --name ${{ env.CONTAINER_GROUP }}
-#       --registry-login-server ${{ env.REGISTRY_LOGIN_SERVER }}
-#       --registry-username ${{ env.REGISTRY_USERNAME }}
-#       --registry-password ${{ env.REGISTRY_PASSWORD }}
+      # - name: Deploy ${{ inputs.APP_NAME }} Worker to Azure Container Instance
+      #   uses: Azure/aci-deploy@v1
+      #   with:
+      #     resource-group: ${{ vars.RESOURCE_GROUP_NAME }}
+      #     image: ${{ env.CONTAINER_REGISTRY }}/quorumondemand/${{ vars.WORKER_IMAGE_NAME }}:latest
+      #     name: ${{ vars.WORKER_APP_NAME }}
+      #     dns-name-label: ${{ vars.WORKER_APP_NAME }}
+      #     environment-variables: ${{ vars.WORKER_ENVIRONMENT_VARIABLES }}
+      #     secure-environment-variables: ${{ secrets.WORKER_SECURE_ENVIRONMENT_VARIABLES}}
+      #     location: ${{ env.AZURE_LOCATION }}
+      #     registry-login-server: ${{ env.CONTAINER_REGISTRY }}
+      #     registry-username: ${{ env.CONTAINER_REGISTRY_USERNAME }}
+      #     registry-password: ${{ env.CONTAINER_REGISTRY_PASSWORD }}
+      #     restart-policy: Always
+
+      # - name: Deploy to Azure Container Instances
+      #   run: |
+      #     az container create --resource-group ${{ env.RESOURCE_GROUP }} --name conductor --file ./docker/docker-compose.yaml
+
+      # - name: Deploy to Azure Container Instances
+      # run: |
+      #   az container create
+      #       --resource-group ${{ env.RESOURCE_GROUP }}
+      #       --file ./docker/docker-compose.yaml
+      #       --name ${{ env.CONTAINER_GROUP }}
+      #       --registry-login-server ${{ env.REGISTRY_LOGIN_SERVER }}
+      #       --registry-username ${{ env.REGISTRY_USERNAME }}
+      #       --registry-password ${{ env.REGISTRY_PASSWORD }}
