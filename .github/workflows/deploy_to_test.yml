@@ -41,7 +41,7 @@ jobs:
         with:
           push: true
           tags: ${{ env.REGISTRY_LOGIN_SERVER }}/romanprivateorg/conductor-server:latest
-          file: ./docker/ui/Dockerfile
+          file: ./docker/server/Dockerfile
 # - name: Deploy to Azure Container Instances
 #   run: |
 #     az container create --resource-group ${{ env.RESOURCE_GROUP }} --name conductor --file ./docker/docker-compose.yaml
