@@ -38,7 +38,7 @@ jobs:
           username: ${{ env.REGISTRY_USERNAME }}
           password: ${{ env.REGISTRY_PASSWORD }}
       - run: |
-          docker build docker/server/Dockerfile -t ${{ env.REGISTRY_LOGIN_SERVER }}/romanprivateorg:${{ github.sha }}
+          docker build ./docker/server/Dockerfile -t ${{ env.REGISTRY_LOGIN_SERVER }}/romanprivateorg:${{ github.sha }}
           docker push ${{ env.REGISTRY_LOGIN_SERVER }}/romanprivateorg:${{ github.sha }}
 
       # - name: Build and push conductor ui
