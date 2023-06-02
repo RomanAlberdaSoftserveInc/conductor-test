@@ -8,35 +8,31 @@ on:
 env:
   RESOURCE_GROUP: conductor
   CONTAINER_GROUP: conductor
-  REGISTRY_LOGIN_SERVER: conductorreg.azurecr.io
+  REGISTRY_LOGIN_SERVER: ${{ secrets.REGISTRY_LOGIN_SERVER }}
   REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
   REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
       - name: Login to Azure
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-
       - name: Login To Container Registry
         uses: docker/login-action@v2
         with:
           registry: ${{ env.REGISTRY_LOGIN_SERVER }}
           username: ${{ env.REGISTRY_USERNAME }}
           password: ${{ env.REGISTRY_PASSWORD }}
-
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
           push: true
-          tags: user/app:latest
+          tags: ${{ secrets.REGISTRY_LOGIN_SERVER }}/conductorui:${{ steps.tag.outputs.tag }}
           file: ./docker/ui/Dockerfile
 # - name: Deploy to Azure Container Instances
 #   run: |
