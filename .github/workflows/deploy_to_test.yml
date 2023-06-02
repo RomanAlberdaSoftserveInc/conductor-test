@@ -28,11 +28,19 @@ jobs:
           registry: ${{ env.REGISTRY_LOGIN_SERVER }}
           username: ${{ env.REGISTRY_USERNAME }}
           password: ${{ env.REGISTRY_PASSWORD }}
-      - name: Build and push
+
+      - name: Build and push conductor ui
         uses: docker/build-push-action@v4
         with:
           push: true
-          tags: ${{ env.REGISTRY_LOGIN_SERVER }}/romanprivateorg/conductor:latest
+          tags: ${{ env.REGISTRY_LOGIN_SERVER }}/romanprivateorg/conductor-ui:latest
+          file: ./docker/ui/Dockerfile
+
+      - name: Build and push conductor server
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          tags: ${{ env.REGISTRY_LOGIN_SERVER }}/romanprivateorg/conductor-server:latest
           file: ./docker/ui/Dockerfile
 # - name: Deploy to Azure Container Instances
 #   run: |
